@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+  
+    <head th:replace="/fragments/head :: _head"></head>
+    
+    <body>
+        <!-- header -->
+        <header class="px-4">
+            <section class="contenedorheader">
+                <a href="/"><h1>Egg New's</h1></a>
+                <nav class="nav-menu">
+                    <a href="/registrar">Registrarse</a>
+                    <a href="/login">Ingresar</a>
+                    <a href="#contact">Contacto</a>
+                </nav>
+            </section>
+        </header>
+
+        <main>
+
+            <div th:replace="fragments/error_exito :: _error_exito"></div>
+
+            <section th:replace="fragments/hero :: _hero"></section>
+
+        </main>
+
+        <footer th:replace="fragments/footer :: _footer"></footer>
+    </body>
+</html>

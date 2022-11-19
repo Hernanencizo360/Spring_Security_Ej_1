@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+        <title>Formulario Noticia</title>
+    </head>
+
+    <body>
+
+
+        <div class="container">
+
+            <h1 class="text-center mt-5">FORMULARIO</h1>
+
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card mb-5">
+                        <div class="card-body">
+
+
+
+                            <form action="/admin/creando" method="POST">
+
+                                <div class="row g-3">
+
+                                    <div class="form-group col-md-12">
+                                        <strong><label for="titulo">Titulo de la Noticia:</label></strong>
+                                        <input type="text" required name="titulo" class="form-control" placeholder="Ingrese el titulo de la noticia">
+                                    </div>
+
+                                    <div class="form-group col-md-12">
+                                        <strong><label for="cuerpo">Cuerpo de la Noticia:</label></strong>
+                                        <textarea required name="cuerpo" class="form-control" rows="5" placeholder="Ingrese el cuerpo de la noticia"></textarea>
+                                    </div>
+
+                                    <div class="form-group col-md-12">
+                                        <strong><label for="titulo">Imagen de la Noticia:</label></strong>
+                                        <input type="text" required name="imagen" class="form-control" placeholder="Ingrese la URL de la imagen de la noticia">      
+                                    </div>
+                                </div>
+
+                                <div class="row m-3">
+                                    <div class="col-md-6">
+                                        <button class="btn btn-danger" type="reset" style="width:100%">Resetear
+                                            Formulario
+                                        </button>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button class="btn btn-success" type="submit" style="width:100%">Guardar</button>
+                                    </div>
+                                </div>
+                                
+                                      <!--DEBAJO DE CARD-BODY FUNCIONA-->
+                                <!-- PARA ERRORES O EXITOS THYMELIFE-->
+                                <!-- SI en el modelo existe una variable que esta inyectando un error lo vamos a mostrar-->
+                                <div th:if="${error != null}" class="card text-white bg-danger mb-3 mensajeError" >
+                                    <div class="card-body">
+                                        <h5 class="card-title">¡Error!</h5>
+                                        <p class="card-text" th:text="${error}"></p>
+                                    </div>
+                                </div>
+
+                                <div th:if="${exito != null}" class="card text-white bg-success mb-3 mt-3 mensajeExito" >
+                                    <div class="card-body">
+                                        <h5 class="card-title">Exito!</h5>
+                                        <p class="card-text" th:text="${exito}"></p>
+                                        <!-- SI en el modelo existe una variable que esta inyectando un EXITO lo vamos a mostrar-->
+                                    </div>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <section th:replace="fragments/volverInicio :: _volver"></section>
+        <footer th:replace="fragments/footer :: _footer"></footer>
+    </body>
+
+</html>
