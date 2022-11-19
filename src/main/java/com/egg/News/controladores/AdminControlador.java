@@ -24,6 +24,7 @@ public class AdminControlador {
     @Autowired
     private NoticiaServicio noticiaServicio;
 
+    /*
     @GetMapping("/dashboard")
     public String panelAdministrativo(ModelMap modelo) {
 
@@ -82,6 +83,7 @@ public class AdminControlador {
             return "noticiaModificar.html";
         }
     }
+     */
 
     @GetMapping("/eliminar/{id}")
     public String eliminar(@PathVariable String id, ModelMap modelo) throws MiException {

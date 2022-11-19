@@ -30,7 +30,10 @@
         <section class="hero">
             <div class="titleh">
                 <h1 class="py-3">Bienvenido a Egg New's</h1>
-                <h3>Seccion de administracion</h3>
+                <h3>Seccion de
+                    <span sec:authorize="hasRole('ADMIN')">Administradores</span> 
+                    <span sec:authorize="hasRole('PERIODISTA')">Periodistas</span>
+                </h3>
                 <p class="my-1" >
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit,
                     delectus. Tempore vitae dignissimos asperiores neque. Laboriosam,

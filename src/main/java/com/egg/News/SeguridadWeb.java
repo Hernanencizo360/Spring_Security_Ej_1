@@ -1,6 +1,5 @@
 package com.egg.News;
 
-
 import com.egg.News.servicios.UsuarioServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -15,12 +14,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
  *
  * @author Hernan
  */
-
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SeguridadWeb extends WebSecurityConfigurerAdapter{
-    
+public class SeguridadWeb extends WebSecurityConfigurerAdapter {
+
     // instanciar un usuario servicio
     @Autowired
     public UsuarioServicio usuarioServicio;
@@ -28,32 +26,33 @@ public class SeguridadWeb extends WebSecurityConfigurerAdapter{
     // posteriormente debemos generar un metodo configureGlobal con la notacion autowired
     // va a recibir un objeto del tipo Authentication
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception{
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(usuarioServicio).passwordEncoder(new BCryptPasswordEncoder());
     }
-    
+
     @Override
-    protected void configure(HttpSecurity http) throws Exception{
+    protected void configure(HttpSecurity http) throws Exception {
         // los recursos alvergados en esta carpeta son accesibles para todos sin necesidad de logueo o permiso. 
         //        http.authorizeRequests().antMatchers("/css/*", "/js/*", "/img/*", "/**").permitAll(); codigo inicial ahora añadimmos nuevos permisos
         http.
                 authorizeRequests()
-                    .antMatchers("/admin/*").hasRole("ADMIN")
-                    .antMatchers("/css/*", "/js/*", "/img/*", "/**")
-                    .permitAll()
+                .antMatchers("/admin/*").hasRole("ADMIN")
+                .antMatchers("/periodista/*").access("hasRole('ROLE_PERIODISTA') or hasRole('ROLE_ADMIN')")
+                .antMatchers("/css/*", "/js/*", "/img/*", "/**")
+                .permitAll()
                 .and().formLogin()
-                    .loginPage("/login")
-                    .loginProcessingUrl("/logincheck")
-                    .usernameParameter("email")
-                    .passwordParameter("password")
-                    .defaultSuccessUrl("/inicio")
-                    .permitAll()
+                .loginPage("/login")
+                .loginProcessingUrl("/logincheck")
+                .usernameParameter("email")
+                .passwordParameter("password")
+                .defaultSuccessUrl("/inicio")
+                .permitAll()
                 .and().logout()
-                    .logoutUrl("/logout")
-                    .logoutSuccessUrl("/login")
-                    .permitAll()
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login")
+                .permitAll()
                 .and().csrf()
-                    .disable();
-                
+                .disable();
+
     }
 }

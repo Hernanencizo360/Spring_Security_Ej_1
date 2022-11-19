@@ -48,7 +48,7 @@ public class PortalControlador {
             Usuario logueado = (Usuario) session.getAttribute("usuarioSession");
             
             if(logueado.getRol().toString().equals("ADMIN") || logueado.getRol().toString().equals("PERIODISTA") ){
-                return "redirect:/admin/dashboard";
+                return "redirect:/periodista/dashboard";
             }else{
                 return "inicio"; // si es usuario va a inicio sino dashboard
             }
