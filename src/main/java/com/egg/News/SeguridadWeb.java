@@ -54,5 +54,6 @@ public class SeguridadWeb extends WebSecurityConfigurerAdapter {
                 .and().csrf()
                 .disable();
 
-    }
+    } //nota --> para lograr el acceso tanto del ADMIN como del PERIDISTA agregue la sentencia 
+      // andMatchert("/periodista/*").acces("hasRole('ROLE_PERIODISTA') or hasRole('ROLE_ADMIN')"
 }

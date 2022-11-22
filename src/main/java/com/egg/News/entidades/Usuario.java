@@ -27,7 +27,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Getter
 @Setter
 @Table(name = "usuario")
-@Inheritance(strategy=InheritanceType.JOINED)
+//@Inheritance(strategy=InheritanceType.JOINED)
 public class Usuario{
 
     @Id

@@ -80,7 +80,8 @@ public class PeriodistaControlador {
             noticiaServicio.modificarNoticia(id, titulo, cuerpo, imagen);
             modelo.put("exito", "Noticia modificada con exito");
 
-            return "noticiaList.html";
+            return "redirect:/periodista/listaCRUD";
+//            return "noticia_list.html";
         } catch (MiException ex) {
             modelo.put("error", ex.getMessage());
             return "noticiaModificar.html";

@@ -1,8 +1,10 @@
 package com.egg.News.controladores;
 
-import com.egg.News.entidades.Noticia;
+import com.egg.News.entidades.Usuario;
 import com.egg.News.excepciones.MiException;
 import com.egg.News.servicios.NoticiaServicio;
+import com.egg.News.servicios.PeriodistaServicio;
+import com.egg.News.servicios.UsuarioServicio;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,80 +13,68 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
  * @author Hernan
  */
+
 @Controller
 @RequestMapping("/admin")
 public class AdminControlador {
 
     @Autowired
     private NoticiaServicio noticiaServicio;
+    @Autowired
+    private UsuarioServicio usuarioServicio;
+    @Autowired PeriodistaServicio periodistaServicio; 
 
-    /*
-    @GetMapping("/dashboard")
-    public String panelAdministrativo(ModelMap modelo) {
-
-        return "panel.html";
-    }
-
-    @GetMapping("/crear") //localhost:8080/admin/crear
-    public String crear() {
-
-        return "noticiaFormulario";
-    }
-
-    @PostMapping("/creando")
-    public String creando(@RequestParam String titulo, @RequestParam String cuerpo, @RequestParam String imagen, ModelMap modelo) {
-
-        try {
-            noticiaServicio.crearNoticia(titulo, cuerpo, imagen);
-
-            modelo.put("exito", "La Noticia fue cargada con éxito.");
-
-            return "panel.html";
-
-        } catch (MiException ex) {
-
-            modelo.put("error", ex.getMessage());
-            return "noticiaFormulario";
-        }
-    }
-
-    @GetMapping("/listaCRUD")
+    @GetMapping("/listaPeriodistas")
     public String listar(ModelMap modelo) {
 
-        List<Noticia> noticias = noticiaServicio.listarNoticias();
+        List<Usuario> usuarios = usuarioServicio.listarPeriodistas();
 
-        modelo.put("noticias", noticias);
+        modelo.put("usuarios", usuarios);
 
-        return "noticiaCRUD.html";
+        return "periodistasCRUD.html";
     }
 
-    @GetMapping("/modificar/{id}")
-    public String modificar(@PathVariable String id, ModelMap modelo) {
-        modelo.put("noticia", noticiaServicio.getOne(id));
-
-        return "noticiaModificar.html";
-    }
-
-    @PostMapping("/modificar/{id}")
-    public String modificar(@PathVariable String id, String titulo, String cuerpo, String imagen, ModelMap modelo) {
+    @GetMapping("/modificarEstado/{id}")
+    public String estado(@PathVariable String id, ModelMap modelo) {
+        
         try {
-            noticiaServicio.modificarNoticia(id, titulo, cuerpo, imagen);
-            modelo.put("exito", "Noticia modificada con exito");
+            usuarioServicio.modificarEstado(id);
+            modelo.put("exito", "Usuario modificado satisfactoriamente.");
+        } catch (MiException ex) {
+           modelo.put("error", ex.getMessage());
+        }
+        // si redirecciono no se muestra el mensaje solucionar luego, en cambio al mostrar periodistasCRUD si.
+        return "redirect:/admin/listaPeriodistas";
+    }
+    
+    
 
-            return "noticiaList.html";
+    @GetMapping("/modificarSueldo/{id}")
+    public String sueldo(@PathVariable String id, ModelMap modelo) {
+        modelo.put("usuario", usuarioServicio.getOne(id));
+
+        return "periodistaModificarSueldo.html";
+    }
+    
+    @PostMapping("/modificarSueldo/{id}")
+    public String sueldo(@PathVariable String id, Integer sueldo, ModelMap modelo) {
+        try {
+            
+            periodistaServicio.modificarSueldo(id, sueldo);
+            modelo.put("exito", "Sueldo modificado con exito");
+            return "periodistasCRUD.html";
+            
         } catch (MiException ex) {
             modelo.put("error", ex.getMessage());
-            return "noticiaModificar.html";
+            return "periodistaModificarSueldo.html";
         }
     }
-     */
-
+   
     @GetMapping("/eliminar/{id}")
     public String eliminar(@PathVariable String id, ModelMap modelo) throws MiException {
         noticiaServicio.eliminarNoticia(id);

@@ -26,6 +26,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
  *
  * @author Hernan
  */
+
 @Service
 public class UsuarioServicio implements UserDetailsService {
 
@@ -105,20 +106,18 @@ public class UsuarioServicio implements UserDetailsService {
 
             // agregamos los permisos al constructor junto con email y la contraseña            
             User user = new User(usuario.getEmail(), usuario.getPassword(), permisos);
-            
+
             // atrapamos al usuario que ya esta autenticado y guardarlo en la session.
             ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-            
+
             //Guardamos la solicitud en un objeto de la interfaz HttpSession
             HttpSession session = attr.getRequest().getSession(true);
-            
+
             // en los datos de la session seteamos los atributos
             // en la varible session vamos a setear el atributo usuarioSession como llave y lo que va a contener 
             // es el valor con todos los datos del objeto usuario autentificado.
-            session.setAttribute("usuarioSession", usuario); 
-            
-            
-            
+            session.setAttribute("usuarioSession", usuario);
+
             // y retornamos ese Usuario.
             return user;
         } else {
@@ -143,25 +142,7 @@ public class UsuarioServicio implements UserDetailsService {
         }
     }
 
-    public void deshabilitar(String id) throws MiException {
-        if (id == null || id.isEmpty()) {
-            throw new MiException("No hay ningun usuario con ese ID");
-        }
-
-        Optional<Usuario> respuesta = usuarioRepositorio.findById(id);
-
-        if (respuesta.isPresent()) {
-            Usuario usuario = respuesta.get();
-
-            usuario.setActivo(Boolean.FALSE);
-
-            usuarioRepositorio.save(usuario);
-        } else {
-            throw new MiException("No se encontro ningún usuario con ese ID");
-        }
-    }
-
-    public void habilitar(String id) throws MiException {
+    public void modificarEstado(String id) throws MiException {
         if (id == null || id.isEmpty()) {
             throw new MiException("El id no puede ser nulo o estar vacio");
         }
@@ -171,12 +152,30 @@ public class UsuarioServicio implements UserDetailsService {
         if (respuesta.isPresent()) {
             Usuario usuario = respuesta.get();
 
-            usuario.setActivo(Boolean.TRUE);
-
+            if (usuario.getActivo().equals(Boolean.TRUE)) {
+                usuario.setActivo(Boolean.FALSE);
+            }else{
+                usuario.setActivo(Boolean.TRUE);
+            }
+            
             usuarioRepositorio.save(usuario);
+            
         } else {
             throw new MiException("No se encontro ningún usuario con ese ID");
         }
     }
 
+    public List<Usuario> listarPeriodistas() {
+
+        List<Usuario> usuarios = new ArrayList();
+
+//        usuarios = usuarioRepositorio.findAll(Sort.by(Sort.Direction.ASC, "rol"));
+        usuarios = usuarioRepositorio.buscarPeriodistas();
+
+        return usuarios;
+    }
+
+    public Usuario getOne(String id) {
+        return usuarioRepositorio.getById(id);
+    }
 }
