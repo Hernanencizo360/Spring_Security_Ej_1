@@ -1,6 +1,5 @@
 package com.egg.News.entidades;
 
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -18,10 +17,9 @@ import lombok.Setter;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class Periodista extends Usuario{
     
     private Integer sueldoMensual;
     @OneToMany
-    private List<Noticia> misNoticias = new ArrayList(); 
+    private List<Noticia> misNoticias; 
 }

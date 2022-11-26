@@ -26,7 +26,6 @@ import org.hibernate.annotations.GenericGenerator;
 public class Noticia implements Serializable {
     
     // Atributos 
-
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
@@ -44,7 +43,7 @@ public class Noticia implements Serializable {
     private Periodista creador;
 
     
-    // Constructores agregados con Lombok linea 23
+    // Constructores agregados con Lombok linea 24
   
-    // Metodos Getter y Setter agregados con Lombok linea 24
+    // Metodos Getter y Setter agregados con Lombok linea 25
 }

@@ -34,10 +34,7 @@
                             <th scope="col">Email</th>
                             <th scope="col">Rol</th>
                             <th scope="col">Estado de Alta</th>
-                            <th scope="col">Modificar Alta</th>
-                            <th scope="col">Sueldo</th>
-                            <th scope="col">Modificar Sueldo</th>
-                            
+                            <th scope="col">Modificar Alta</th> 
                         </tr>
                     </thead>
 
@@ -51,13 +48,6 @@
                             <td scope="row" th:text="${usuario.activo}"></td>
                             <td>
                                 <a class="btn btn-warning btn-sm" th:href= "@{/admin/modificarEstado/__${usuario.id}__}">Modificar</a>
-                            </td>
-                            <td scope="row" th:text="${usuario.sueldoMensual}"></td>
-                            
-                            <!-- CUANDO SE SELECCIONE EL BOTON MODIFICAR se redirecciona admin/modificarSueldo metodo GET-->
-                            <!--LLEVANDO EL ID DEL USUARIO SELECCIONADO-->
-                            <td>
-                                <a class="btn btn-warning btn-sm" th:href= "@{/admin/modificarSueldo/__${usuario.id}__}">Modificar</a>
                             </td>
                         </tr>
                         

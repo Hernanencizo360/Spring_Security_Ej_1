@@ -1,10 +1,14 @@
 package com.egg.News.servicios;
 
 import com.egg.News.entidades.Noticia;
+import com.egg.News.entidades.Periodista;
+import com.egg.News.entidades.Usuario;
 import com.egg.News.excepciones.MiException;
 import com.egg.News.repositorios.NoticiaRepositorio;
+import com.egg.News.repositorios.PeriodistaRepositorio;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +25,8 @@ public class NoticiaServicio {
 
     @Autowired
     private NoticiaRepositorio noticiaRepositorio;
+    @Autowired
+    private PeriodistaRepositorio periodistaRepositorio;
 
     private void validar(String titulo, String cuerpo, String urlDeImagen) throws MiException {
         if (titulo == null || titulo.isEmpty()) {
@@ -37,7 +43,7 @@ public class NoticiaServicio {
     }
 
     @Transactional
-    public void crearNoticia(String titulo, String cuerpo, String urlImagen) throws MiException {
+    public void crearNoticia(String titulo, String cuerpo, String urlImagen, Usuario creador) throws MiException {
 
         validar(titulo, cuerpo, urlImagen);
 
@@ -48,6 +54,36 @@ public class NoticiaServicio {
         noticia.setAlta(new Date());
         noticia.setImagen(urlImagen);
 
+        // retoque final de agregar id del creador periodista si fuera ADMIN no se inserta id Por la relacion de las entidades
+        if (creador.getRol().toString().equals("PERIODISTA")) {
+
+            System.out.println(">>>>>>>>>>>>ESTOY COMO ADMIN Y ESTOY DENTRO?<<<<<<<<<<<<<<<<<");
+            System.out.println("");
+            System.out.println("");
+
+            Periodista periodista = new Periodista();
+
+            periodista = (Periodista) creador;
+
+            try {
+
+                noticia.setCreador(periodista);
+
+                // busco la lista de noticias que tiene ese Periodista agrego la nueva noticia y seteo los cambios.
+                List<Noticia> noticias = noticiaRepositorio.buscarPorPeriodista(periodista.getId());
+                noticias.add(noticia);
+
+                periodista.setMisNoticias(noticias);
+
+                // persisto la noticia y al periodista
+                noticiaRepositorio.save(noticia);
+                periodistaRepositorio.save(periodista);
+
+            } catch (NullPointerException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        // Si es un admin el que crea la noticia la guardo sin idCreador la relacion es con periodista
         noticiaRepositorio.save(noticia);
     }
 
@@ -63,6 +99,8 @@ public class NoticiaServicio {
         }
     }
 
+    //Nota: agregue validaciones para que se pueda modificar solo las noticias que le pertenecen a cada periodista
+    // dicha validacion en el controlador podria hacer un metodo en el servicio que se encargue de dicha tarea.
     @Transactional
     public void modificarNoticia(String id, String titulo, String cuerpo, String urlImagen) throws MiException {
 
@@ -82,7 +120,7 @@ public class NoticiaServicio {
 
             noticiaRepositorio.save(noticia);
         } else {
-            throw new MiException("No se encontro el ID del usuario solicitado");
+            throw new MiException("No se encontro el ID de la noticia solicitado");
         }
     }
 
@@ -91,8 +129,36 @@ public class NoticiaServicio {
         Optional<Noticia> respuesta = noticiaRepositorio.findById(id);
 
         if (respuesta.isPresent()) {
+
             Noticia noticia = respuesta.get();
-            noticiaRepositorio.deleteById(noticia.getId());
+
+            Periodista periodista = new Periodista();
+
+            periodista = noticia.getCreador();
+            try {
+                // para poder eliminar una noticia primeramente debo eliminar la relacion que existe con el periodista
+                // es decir eliminar la FK de la tabla lista noticias.
+                List<Noticia> noticias = noticiaRepositorio.buscarPorPeriodista(periodista.getId());
+
+                Iterator<Noticia> it = noticias.iterator();
+
+                while (it.hasNext()) {
+                    Noticia aux = it.next();
+                    if (aux.getId().equals(id)) {
+                        it.remove();
+                        break;
+                    }
+                }
+                // en el bucle elimino la noticia de la lista seteo la lista actualizada al id del periodista.
+                periodista.setMisNoticias(noticias);
+
+                periodistaRepositorio.save(periodista);
+            } catch (NullPointerException e) {
+                System.out.println("Noticia creada por el admin");
+            } finally {
+                // <<ELIMINACION DE LA NOTICIA DE LA BASE DE DATOS>>
+                noticiaRepositorio.deleteById(noticia.getId());
+            }
         } else {
             throw new MiException("No existe una Noticia con ese ID");
         }
@@ -103,13 +169,11 @@ public class NoticiaServicio {
         List<Noticia> noticias = new ArrayList();
 
         noticias = noticiaRepositorio.findAll(Sort.by(Sort.Direction.ASC, "alta"));
-        
-       
+
         return noticias;
     }
-    
-    public Noticia getOne(String id){
+
+    public Noticia getOne(String id) {
         return noticiaRepositorio.getById(id);
     }
-
 }

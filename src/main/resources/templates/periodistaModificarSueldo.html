@@ -12,7 +12,7 @@
 
         <div class="container">
 
-            <h1 class="text-center mt-5">MODIFICAR</h1>
+            <h1 class="text-center mt-5">MODIFICAR SUELDO</h1>
 
             <div class="row mt-4">
                 <div class="col-12">
@@ -25,10 +25,21 @@
                                 <input hidden th:value= "${id}" name="id">
 
                                 <div class="row g-3">
+                                    
+                                    <div class="form-group col-md-12">
+                                        <strong><label for="cuerpo">Nombre del Periodista</label></strong>
+                                        <input type="text" disabled name="nombre" th:value="${usuario.nombreUsuario}" class="form-control" rows="5" required></input>
+                                    </div>
+                                    
+                                    <div class="form-group col-md-12">
+                                        <strong><label for="cuerpo">Email del Periodista</label></strong>
+                                        <input type="email" disabled name="email" th:value="${usuario.email}" class="form-control" rows="5" required></input>
+                                    </div>
 
+                                    <!--PIDO EL SUELDO QUE LE CORRESPONDE A ESE USUARIO-->
                                     <div class="form-group col-md-12">
                                         <strong><label for="sueldo">SUELDO</label></strong>
-                                        <input type="number" name="sueldo" class="form-control" placeholder="INGRESE EL SUELDO" required>
+                                        <input type="number" name="sueldo" class="form-control" placeholder="INGRESE EL SUELDO" required min="20000" max="100000">
                                     </div>
                                 </div>
 

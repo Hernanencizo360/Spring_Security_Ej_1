@@ -43,8 +43,7 @@ public class PortalControlador {
     @GetMapping("/inicio") // especificamos la ruta donde interactua el usuario
     public String inicio(ModelMap model, HttpSession session) {
         
-        try {  
-            
+        try {             
             Usuario logueado = (Usuario) session.getAttribute("usuarioSession");
             
             if(logueado.getRol().toString().equals("ADMIN") || logueado.getRol().toString().equals("PERIODISTA") ){

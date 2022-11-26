@@ -1,8 +1,10 @@
 package com.egg.News.servicios;
 
+import com.egg.News.entidades.Periodista;
 import com.egg.News.entidades.Rol;
 import com.egg.News.entidades.Usuario;
 import com.egg.News.excepciones.MiException;
+import com.egg.News.repositorios.PeriodistaRepositorio;
 import com.egg.News.repositorios.UsuarioRepositorio;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -26,13 +29,12 @@ import org.springframework.web.context.request.ServletRequestAttributes;
  *
  * @author Hernan
  */
-
 @Service
 public class UsuarioServicio implements UserDetailsService {
 
     @Autowired
     private UsuarioRepositorio usuarioRepositorio;
-
+  
     // MËTODO PARA VALIDAR LOS PARAMETROS RECIBIDOS DEL FORMULARIO
     private void validar(String nombre, String email, String password, String password2) throws MiException {
         if (nombre == null || nombre.isEmpty()) {
@@ -142,6 +144,7 @@ public class UsuarioServicio implements UserDetailsService {
         }
     }
 
+    // nota queda por reseatear el sueldo cuando se da de baja o se modifica el rol a USER.
     public void modificarEstado(String id) throws MiException {
         if (id == null || id.isEmpty()) {
             throw new MiException("El id no puede ser nulo o estar vacio");
@@ -154,12 +157,45 @@ public class UsuarioServicio implements UserDetailsService {
 
             if (usuario.getActivo().equals(Boolean.TRUE)) {
                 usuario.setActivo(Boolean.FALSE);
-            }else{
+                // CONDICIONAL SI EL ROL DEL USUARIO ES PERIODISTA: SI ES PUEDO CASTEAR Y ACCEDER AL METODO MODIFI SUELDO
+                if (usuario.getRol().toString().equals("PERIODISTA")) {
+                    Periodista periodista = (Periodista) usuario;
+                    periodista.setSueldoMensual(null);
+                }
+
+            } else {
                 usuario.setActivo(Boolean.TRUE);
             }
-            
+            // POR ULTIMO GUARDO LOS CAMBIOS 
             usuarioRepositorio.save(usuario);
-            
+
+        } else {
+            throw new MiException("No se encontro ningún usuario con ese ID");
+        }
+    }
+
+    public void modificarRol(String id) throws MiException {
+
+        Optional<Usuario> respuesta = usuarioRepositorio.findById(id);
+
+        if (respuesta.isPresent()) {
+
+            if (respuesta.get().getRol().toString().equals("USER")) {
+                Usuario periodista = new Periodista();
+                periodista = respuesta.get();
+
+                periodista.setRol(Rol.PERIODISTA);
+
+                // NOTA IMPORTANTE AQUI SE LLAMA AL REPO Y LANZO LA QUERY QUE MODIFICA EL TIPO DE OBJETO 
+                // CON ESO SOLUCIONO EL ERROR CREO QUE ERA WrongClassException Y POR TANTO TENGO ACCESO A LA LISTA NOTICIA Y SUELDO
+                usuarioRepositorio.cambiarRol("Periodista", id);
+
+            } else {
+                respuesta.get().setRol(Rol.USER);
+                usuarioRepositorio.cambiarRol("Usuario", id);
+                usuarioRepositorio.eliminarSueldo(null, id);
+            }
+
         } else {
             throw new MiException("No se encontro ningún usuario con ese ID");
         }
@@ -167,10 +203,22 @@ public class UsuarioServicio implements UserDetailsService {
 
     public List<Usuario> listarPeriodistas() {
 
+        // creacion de una lista que almacenara los usuarios con rol periodista
         List<Usuario> usuarios = new ArrayList();
 
-//        usuarios = usuarioRepositorio.findAll(Sort.by(Sort.Direction.ASC, "rol"));
+        //la lista va a contener los usuarios que me devuelva el repositorio 
+        //EN UsuarioRepositorio hay una Query que me devuelve los usuarios con el ROL de periodista
         usuarios = usuarioRepositorio.buscarPeriodistas();
+
+        // RETORTNO LA LISTA AL CONTROLADOR admin/listarPeridista para inyectarlos en una tabla
+        return usuarios;
+    }
+
+    public List<Usuario> listarUsuarios() {
+
+        List<Usuario> usuarios = new ArrayList();
+
+        usuarios = usuarioRepositorio.findAll(Sort.by(Sort.Direction.ASC, "rol"));
 
         return usuarios;
     }

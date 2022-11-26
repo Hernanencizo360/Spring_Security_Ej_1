@@ -22,6 +22,7 @@ public class PeriodistaServicio {
     private UsuarioRepositorio usuarioRepositorio;
 
     public void modificarSueldo(String id, Integer sueldo) throws MiException {
+        
         if (id == null || id.isEmpty()) {
             throw new MiException("El id no puede ser nulo o estar vacio.");
         }
@@ -29,15 +30,17 @@ public class PeriodistaServicio {
             throw new MiException("El sueldo no puede ser nulo");
         }
 
+        // BUSCO EL USUARIO CON ESE ID Y ME LO ALMACENO EN RESPUESTA
         Optional<Usuario> respuesta = usuarioRepositorio.findById(id);
 
-        if (respuesta.isPresent()) {
+        // PROCEDEMOS A CASTEAR LOS DATOS QUE ESTAN ALMACENADOS EN RESPUESTA A PERIODISTA
+        // SE QUE EL USUARIO QUE ME LLEGA ES PERIODISTA POR LA PREVIA FILTRACION EN LA VISTA HTML(TABLA)
+        Periodista periodista = (Periodista) respuesta.get();
+        periodista.setSueldoMensual(sueldo);
 
-            Periodista periodista = (Periodista) respuesta.get();
-            periodista.setSueldoMensual(sueldo);
-
-            periodistaRepositorio.save(periodista);
-        }
+        //usuarioRepositorio.save(periodista); si persisto como usuario no voy a tener acceso al sueldo 
+        periodistaRepositorio.save(periodista);  
+        
     }
 
     public Periodista getOne(String id) {
