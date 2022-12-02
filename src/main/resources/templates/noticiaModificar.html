@@ -21,7 +21,7 @@
 
 
 
-                            <form th:action="@{/periodista/modificar/__${noticia.id}__}" method="POST">
+                            <form th:action="@{/periodista/modificar/__${noticia.id}__}" method="POST" enctype="multipart/form-data">
                                 <input hidden th:value= "${id}" name="id">
 
                                 <div class="row g-3">
@@ -38,7 +38,7 @@
 
                                     <div class="form-group col-md-12">
                                         <strong><label for="titulo">Imagen de la Noticia:</label></strong>
-                                        <input type="text" name="imagen" th:value="${noticia.imagen}" class="form-control" placeholder="Ingrese la URL de la imagen de la noticia" required>      
+                                        <input type="file" name="archivo" class="form-control" placeholder="Ingrese la imagen de la noticia" required>      
                                     </div>
                                 </div>
 

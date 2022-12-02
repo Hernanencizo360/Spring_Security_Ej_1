@@ -194,74 +194,8 @@ a:hover {
   display: block;
 }
 
-
-
-
-/* CSS de Series */
-/*.title {
-  text-align: center;
-  margin-top: 150px;
-  font-size: 3em;
-  color: white;
-  text-shadow: -2px -3px rgba(0, 0, 0, 0.452);
+.containerError {
+    margin: 5px;
+    align-items: center;
+    justify-content: center;
 }
-
-.seccion {
-  display: flex;
-  flex-wrap: wrap;
-   flex-wrap  especifica si los elementos "hijos" son obligados a permanecer en una misma línea o pueden fluir en varias líneas.
-  justify-content: space-around;
-  padding: 20px;
-}
-
-.card1{
-  display: flex;
-  flex-wrap: wrap;
-  background-color: rgb(103, 0, 114);
-  color: blanchedalmond;
-  width: 300px;
-  height: 635px;
-  margin: 20px 10px;
-  text-align: center;
-  padding: 20px 25px;
-  border-radius: 25px;
-  box-shadow: 5px 5px rgba(0, 0, 0, 0.815);
-  align-items: center;
-  justify-content: center;
-}
-
-.card__title1 {
-  margin-bottom: 15px;
-  border-bottom: 2px solid white;
-  text-shadow: -2px -3px rgba(0, 0, 0, 0.452);
-}
-
-.card__img1 {
-  height: 60%;
-  width: 100%;
-  border-radius: inherit;
-   inherit es un valor permitido en todas las propiedades CSS. Hace que el elemento al cual se aplica tome el valor calculado de la propiedad de su elemento padre. 
-  display: block;
-}
-
-.card__parrafo1 {
-  margin: 15px 0px;
-  padding-bottom: 8px;
-  border-bottom: 2px solid white;
-  font-family: "Roboto";
-}
-
-.card__btn1 {
-  display: block;
-  background-color: white;
-  color: black;
-  font-weight: bold;
-  text-decoration: none;
-  padding: 20px 60px;
-  border-radius: 25px;
-  box-shadow: 3px 3px rgba(0, 0, 0, 0.5);
-}
-
-.card__btn1:hover {
-  background-color: rgb(75, 0, 146);
-}*/

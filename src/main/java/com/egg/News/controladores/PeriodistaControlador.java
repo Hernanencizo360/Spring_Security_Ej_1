@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -42,13 +43,13 @@ public class PeriodistaControlador {
     }
 
     @PostMapping("/creando") // CREANDO LA NOTICIA con los parametros recibidos del FORMULARIO
-    public String creando(@RequestParam String titulo, @RequestParam String cuerpo, @RequestParam String imagen, ModelMap modelo, HttpSession session) {
+    public String creando(@RequestParam String titulo, @RequestParam String cuerpo, @RequestParam MultipartFile archivo, ModelMap modelo, HttpSession session) {
 
         try {
             // obtengo informacion de la session y lo almaceno en creador
             Usuario creador = (Usuario) session.getAttribute("usuarioSession");
 
-            noticiaServicio.crearNoticia(titulo, cuerpo, imagen, creador);
+            noticiaServicio.crearNoticia(titulo, cuerpo, archivo, creador);
 
             modelo.put("exito", "La Noticia fue cargada con éxito.");
 
@@ -111,9 +112,9 @@ public class PeriodistaControlador {
 
     // Nota: un periodista solo podra modificar las noticias que le pertenencen validacion en el metodo anterior
     @PostMapping("/modificar/{id}")
-    public String modificar(@PathVariable String id, String titulo, String cuerpo, String imagen, ModelMap modelo) {
+    public String modificar(@PathVariable String id, String titulo, String cuerpo, MultipartFile archivo, ModelMap modelo) {
         try {
-            noticiaServicio.modificarNoticia(id, titulo, cuerpo, imagen);
+            noticiaServicio.modificarNoticia(id, titulo, cuerpo, archivo);
             modelo.put("exito", "Noticia modificada con exito");
 
             return "redirect:/periodista/listaCRUD";

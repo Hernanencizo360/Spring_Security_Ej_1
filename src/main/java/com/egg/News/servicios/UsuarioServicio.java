@@ -218,8 +218,8 @@ public class UsuarioServicio implements UserDetailsService {
 
         List<Usuario> usuarios = new ArrayList();
 
-        usuarios = usuarioRepositorio.findAll(Sort.by(Sort.Direction.ASC, "rol"));
-
+//        usuarios = usuarioRepositorio.findAll(Sort.by(Sort.Direction.ASC, "rol"));
+        usuarios = usuarioRepositorio.listarUsuariosYPeriodistas();   
         return usuarios;
     }
 

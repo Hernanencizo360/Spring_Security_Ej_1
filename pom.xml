@@ -11,7 +11,7 @@
     <groupId>com.egg</groupId>
     <artifactId>News</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>News2</name>
+    <name>News3</name>
     <description>Ejercicio de practica</description>
     <properties>
         <java.version>1.8</java.version>

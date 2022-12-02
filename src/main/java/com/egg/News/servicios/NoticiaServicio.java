@@ -1,5 +1,6 @@
 package com.egg.News.servicios;
 
+import com.egg.News.entidades.Imagen;
 import com.egg.News.entidades.Noticia;
 import com.egg.News.entidades.Periodista;
 import com.egg.News.entidades.Usuario;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -27,8 +29,10 @@ public class NoticiaServicio {
     private NoticiaRepositorio noticiaRepositorio;
     @Autowired
     private PeriodistaRepositorio periodistaRepositorio;
+    @Autowired
+    private ImagenServicio imagenServicio;
 
-    private void validar(String titulo, String cuerpo, String urlDeImagen) throws MiException {
+    private void validar(String titulo, String cuerpo) throws MiException {
         if (titulo == null || titulo.isEmpty()) {
             throw new MiException("El ID del TITULO no puede ser nulo ni estar vacio.");
         }
@@ -37,22 +41,23 @@ public class NoticiaServicio {
             throw new MiException("El ID del CUERPO no puede ser nulo ni estar vacio.");
         }
 
-        if (urlDeImagen == null || urlDeImagen.isEmpty()) {
-            throw new MiException("la URL de la imagen no puede ser nulo ni estar vacio.");
-        }
+//        if (archivo == null || archivo.isEmpty()) {
+//            throw new MiException("la URL de la imagen no puede ser nulo ni estar vacio.");
+//        }
     }
 
     @Transactional
-    public void crearNoticia(String titulo, String cuerpo, String urlImagen, Usuario creador) throws MiException {
+    public void crearNoticia(String titulo, String cuerpo, MultipartFile archivo, Usuario creador) throws MiException {
 
-        validar(titulo, cuerpo, urlImagen);
+        validar(titulo, cuerpo);
 
         Noticia noticia = new Noticia();
+        Imagen imagen = imagenServicio.guardar(archivo);
 
         noticia.setTitulo(titulo);
         noticia.setCuerpo(cuerpo);
         noticia.setAlta(new Date());
-        noticia.setImagen(urlImagen);
+        noticia.setImagen(imagen);
 
         // retoque final de agregar id del creador periodista si fuera ADMIN no se inserta id Por la relacion de las entidades
         if (creador.getRol().toString().equals("PERIODISTA")) {
@@ -102,13 +107,13 @@ public class NoticiaServicio {
     //Nota: agregue validaciones para que se pueda modificar solo las noticias que le pertenecen a cada periodista
     // dicha validacion en el controlador podria hacer un metodo en el servicio que se encargue de dicha tarea.
     @Transactional
-    public void modificarNoticia(String id, String titulo, String cuerpo, String urlImagen) throws MiException {
+    public void modificarNoticia(String id, String titulo, String cuerpo, MultipartFile archivo) throws MiException {
 
         if (id == null || id.isEmpty()) {
             throw new MiException("El ID de la noticia no puede ser nulo ni estar vacio.");
         }
 
-        validar(titulo, cuerpo, urlImagen);
+        validar(titulo, cuerpo);
 
         Optional<Noticia> respuesta = noticiaRepositorio.findById(id);
 
@@ -116,7 +121,16 @@ public class NoticiaServicio {
             Noticia noticia = respuesta.get();
             noticia.setTitulo(titulo);
             noticia.setCuerpo(cuerpo);
-            noticia.setImagen(urlImagen);
+            
+            String idImagen = null;
+            
+            if(noticia.getImagen() != null){
+                idImagen = noticia.getImagen().getId();
+            }
+            
+            Imagen imagen = imagenServicio.actualizar(archivo, idImagen);
+            
+            noticia.setImagen(imagen);
 
             noticiaRepositorio.save(noticia);
         } else {

@@ -21,6 +21,9 @@ public interface UsuarioRepositorio extends JpaRepository<Usuario, String> {
 
     @Query("SELECT u FROM Usuario u WHERE u.rol = 'PERIODISTA'")
     public List<Usuario> buscarPeriodistas();
+    
+    @Query("SELECT u FROM Usuario u WHERE u.rol = 'PERIODISTA' OR u.rol ='USER'")
+    public List<Usuario> listarUsuariosYPeriodistas();
 
     //Query nativa sql para cambiar el dtype cuando se cambia el rol --> esto es importante ya que la modificacion de
     // Sueldo y de las Lista de noticias depende del tipo de objeto en este caso solo periodista tiene estos atributos

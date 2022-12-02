@@ -20,7 +20,7 @@
 
 
 
-                            <form action="/periodista/creando" method="POST">
+                            <form action="/periodista/creando" method="POST" enctype="multipart/form-data">
 
                                 <div class="row g-3">
 
@@ -36,7 +36,7 @@
 
                                     <div class="form-group col-md-12">
                                         <strong><label for="titulo">Imagen de la Noticia:</label></strong>
-                                        <input type="text" required name="imagen" class="form-control" placeholder="Ingrese la URL de la imagen de la noticia">      
+                                        <input type="file" required name="archivo" class="form-control" placeholder="Ingrese la imagen de la noticia">      
                                     </div>
                                 </div>
 

@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import lombok.AllArgsConstructor;
@@ -33,7 +34,9 @@ public class Noticia implements Serializable {
     private String titulo;
     @Column(columnDefinition="TEXT")
     private String cuerpo;
-    private String imagen;
+    
+    @OneToOne
+    private Imagen imagen;
     
     @Temporal(TemporalType.TIMESTAMP)
     private Date alta;
